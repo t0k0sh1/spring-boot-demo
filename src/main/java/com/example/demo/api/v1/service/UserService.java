@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * The UserService class is a service that handles user-related operations.
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -21,11 +24,22 @@ public class UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
+    /**
+     * Retrieves all users.
+     *
+     * @return a list of users
+     */
     @NonNull
     public List<UserDto> getUsers() {
         return modelMapper.map(userRepository.findAll(), new TypeToken<List<UserDto>>() {}.getType());
     }
 
+    /**
+     * Retrieves a user by ID.
+     *
+     * @param id the ID of the user to retrieve
+     * @return the user with the specified ID
+     */
     @Nullable
     public UserDto getUserById(Long id) {
         if (id == null) {
@@ -37,11 +51,24 @@ public class UserService {
                 .orElse(null);
     }
 
+    /**
+     * Creates a new user.
+     *
+     * @param userDto the user to create
+     * @return the created user
+     */
     @NonNull
     public UserDto createUser(UserDto userDto) {
         return modelMapper.map(userRepository.save(modelMapper.map(userDto, User.class)), UserDto.class);
     }
 
+    /**
+     * Updates a user by ID.
+     *
+     * @param id the ID of the user to update
+     * @param userDto the updated user
+     * @return the updated user
+     */
     @Nullable
     public UserDto updateUser(Long id, UserDto userDto) {
         if (id == null || userDto == null) {
@@ -58,7 +85,17 @@ public class UserService {
                 .orElse(null);
     }
 
-    public boolean deleteUser(@NonNull Long id) {
+    /**
+     * Deletes a user by ID.
+     *
+     * @param id the ID of the user to delete
+     * @return true if the user was deleted, false otherwise
+     */
+    public boolean deleteUser(Long id) {
+        if (id == null) {
+            return false;
+        }
+
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
             return true;
