@@ -1,6 +1,7 @@
-package com.example.demo.api.v1.service;
+package com.example.demo.api.service;
 
-import com.example.demo.api.v1.dto.UserDto;
+import com.example.demo.api.dto.UserDto;
+import com.example.demo.api.service.UserService;
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import jakarta.transaction.Transactional;

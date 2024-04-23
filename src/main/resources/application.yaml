@@ -9,6 +9,8 @@ spring:
     jpa:
         hibernate:
             ddl-auto: validate
+        naming:
+            physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
         show-sql: true
     liquibase:
         change-log: classpath:/db/changelog/main-changelog.yaml
@@ -17,6 +19,10 @@ logging:
         root: ${LOG_LEVEL:INFO}
     pattern:
         console: "%date{yyyy-MM-dd HH:mm:ss.SSS} [%-5le] [%t] %C.%M:%L - %m%n"
+security:
+    jwt:
+        secret-key: ${JWT_SECRET_KEY:3cfa76ef14937c1c0ea519f8fc057a80fcd04a7420f8e8bcd0a7567c272e007b}
+        expiration-time: ${JWT_EXPIRATION_TIME:3600000}
 
 ---
 spring:

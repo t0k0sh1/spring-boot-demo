@@ -1,7 +1,8 @@
-package com.example.demo.api.v1.controller;
+package com.example.demo.api.controller;
 
-import com.example.demo.api.v1.dto.UserDto;
-import com.example.demo.api.v1.service.UserService;
+import com.example.demo.api.dto.UserDto;
+import com.example.demo.api.service.JwtService;
+import com.example.demo.api.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -11,18 +12,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Description;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
 @ActiveProfiles("test")
+@WithMockUser(username = "admin", roles = {"ADMIN"})
+@Import(JwtService.class)
 class UserDtoControllerTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -53,8 +59,9 @@ class UserDtoControllerTest {
             // when
             when(userService.getUsers()).thenReturn(expected);
 
+
             // then
-            mockMvc.perform(get("/api/v1/users/"))
+            mockMvc.perform(get("/api/v1/users/").with(csrf().asHeader()))
                     .andExpect(status().isOk())
                     .andExpect(content().json(objectMapper.writeValueAsString(expected)));
         }
@@ -126,7 +133,7 @@ class UserDtoControllerTest {
             when(userService.getUserById(1L)).thenReturn(expected);
 
             // then
-            mockMvc.perform(get("/api/v1/users/1"))
+            mockMvc.perform(get("/api/v1/users/1").with(csrf().asHeader()))
                     .andExpect(status().isOk())
                     .andExpect(content().json(objectMapper.writeValueAsString(expected)));
         }
@@ -138,7 +145,7 @@ class UserDtoControllerTest {
             when(userService.getUserById(4L)).thenReturn(null);
 
             // then
-            mockMvc.perform(get("/api/v1/users/2"))
+            mockMvc.perform(get("/api/v1/users/2").with(csrf().asHeader()))
                     .andExpect(status().isNotFound());
         }
     }
@@ -158,9 +165,9 @@ class UserDtoControllerTest {
             when(userService.createUser(userDto)).thenReturn(expected);
 
             // then
-            mockMvc.perform(post("/api/v1/users/")
-                    .contentType("application/json")
-                    .content(objectMapper.writeValueAsString(userDto)))
+            mockMvc.perform(post("/api/v1/users/").with(csrf().asHeader())
+                            .contentType("application/json")
+                            .content(objectMapper.writeValueAsString(userDto)))
                     .andExpect(status().isCreated())
                     .andExpect(content().json(objectMapper.writeValueAsString(expected)));
         }
@@ -180,7 +187,7 @@ class UserDtoControllerTest {
             when(userService.updateUser(1L, userDto)).thenReturn(userDto);
 
             // then
-            mockMvc.perform(put("/api/v1/users/1")
+            mockMvc.perform(put("/api/v1/users/1").with(csrf().asHeader())
                             .contentType("application/json")
                             .content(objectMapper.writeValueAsString(userDto)))
                     .andExpect(status().isOk())
@@ -197,7 +204,7 @@ class UserDtoControllerTest {
             when(userService.updateUser(1L, null)).thenReturn(null);
 
             // then
-            mockMvc.perform(put("/api/v1/users/1")
+            mockMvc.perform(put("/api/v1/users/1").with(csrf().asHeader())
                             .contentType("application/json")
                             .content(objectMapper.writeValueAsString(userDto)))
                     .andExpect(status().isNotFound());
@@ -215,7 +222,7 @@ class UserDtoControllerTest {
             when(userService.deleteUser(1L)).thenReturn(true);
 
             // then
-            mockMvc.perform(delete("/api/v1/users/1"))
+            mockMvc.perform(delete("/api/v1/users/1").with(csrf().asHeader()))
                     .andExpect(status().isNoContent());
         }
 
@@ -226,7 +233,7 @@ class UserDtoControllerTest {
             when(userService.deleteUser(1L)).thenReturn(false);
 
             // then
-            mockMvc.perform(delete("/api/v1/users/1"))
+            mockMvc.perform(delete("/api/v1/users/1").with(csrf().asHeader()))
                     .andExpect(status().isNotFound());
         }
     }

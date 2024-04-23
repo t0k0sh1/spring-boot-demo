@@ -1,7 +1,7 @@
-package com.example.demo.api.v1.controller;
+package com.example.demo.api.controller;
 
-import com.example.demo.api.v1.dto.UserDto;
-import com.example.demo.api.v1.service.UserService;
+import com.example.demo.api.dto.UserDto;
+import com.example.demo.api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

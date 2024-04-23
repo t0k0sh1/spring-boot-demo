@@ -1,8 +1,8 @@
-package com.example.demo.api.v1.service;
+package com.example.demo.api.service;
 
-import com.example.demo.api.v1.dto.UserDto;
-import com.example.demo.api.v1.entity.User;
-import com.example.demo.api.v1.repository.UserRepository;
+import com.example.demo.api.dto.UserDto;
+import com.example.demo.api.entity.User;
+import com.example.demo.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
